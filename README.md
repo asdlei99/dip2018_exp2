@@ -23,3 +23,8 @@ alexnet = models.alexnet(pretrained=True)
 
 4. data argumentation
 
+## ideas
+
+1. with baseline (2), init weight with causal inference
+
+2. 
