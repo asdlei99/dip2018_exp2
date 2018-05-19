@@ -6,7 +6,18 @@ python: 兼容>=2.7和>=3.5 （请注意//和/的用法和print的用法，print
 
 pytorch==0.4.0
 
-opencv-python
+```
+sudo pip install torch torchvision
+```
+
+## 运行
+
+```
+cd src
+python main.py -d ../data --prefix try 
+```
+
+运行完之后会在当前目录下生成`try.pth`的模型文件，先存着。
 
 ## 文件结构
 
