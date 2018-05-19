@@ -2,9 +2,21 @@
 
 ## requirements
 
-python>=3.5
+python: 兼容>=2.7和>=3.5 （请注意//和/的用法和print的用法，print最好用format）
 
-pytorch==0.3.1
+pytorch==0.4.0
+
+opencv-python
+
+## 文件结构
+
+src: 代码，其中 model 的一些写法可参考 main.py 中的 baseline()
+
+data: 数据，分为 train和 val，由于 val 尚未公布因此只有train，目前只能交叉验证了
+
+material: 一些阅读材料，包括 Few-shot Learning 现在的 state-of-the-art
+
+**一些训好的模型不要加到git上！**
 
 ## pretrained model
 
@@ -15,7 +27,7 @@ alexnet = models.alexnet(pretrained=True)
 
 ## baseline
 
-1. 直接finetune（只调最后一层）
+1. 直接finetune（只调最后一层）done
 
 2. 在原来的fc1000上加一层fc50（只调最后一层）
 
