@@ -57,6 +57,6 @@ class ParamLearner(models.AlexNet):
                 class_w = self.param_learner(class_Rs) 
                 class_logit = torch.matmul(class_w, x[i])
                 i_logits.append(class_logit.max())
-            logits.append(torch.FloatTensor(i_logits))
+            logits.append(torch.stack(i_logits))
         return torch.stack(logits)
 

@@ -71,7 +71,7 @@ dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
 class_names = image_datasets['train'].classes
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+print('device:', device)
 
 def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
@@ -178,6 +178,8 @@ def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_ep
         Rs.append([])
     model.eval()
     for inputs, labels in dataloaders['train']:
+        inputs = inputs.to(device)
+        labels = labels.to(device)
         for index in range(len(inputs)):
             r = model.get_r(inputs[index].unsqueeze_(0))
             Rs[labels[index]].append(r.squeeze())
@@ -201,7 +203,7 @@ def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_ep
             running_loss = 0.0
             running_corrects = 0
 
-            # Iterate over data.
+            # Iterate over data. 
             for inputs, labels in dataloaders[phase]:
                 inputs = inputs.to(device)
                 labels = labels.to(device)
@@ -232,7 +234,7 @@ def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_ep
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
-
+                
             epoch_loss = running_loss / dataset_sizes[phase]
             epoch_acc = running_corrects.double() / dataset_sizes[phase]
 
