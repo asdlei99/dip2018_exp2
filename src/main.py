@@ -12,6 +12,8 @@ import os, time, copy, argparse
 import numpy as np
 from utils import *
 
+from ParamLearner import *
+
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 parser.add_argument('-d','--data', metavar='DIR', type=str, default='../data',
                     help='path to dataset')
@@ -164,9 +166,114 @@ def baseline():
                         exp_lr_scheduler, num_epochs=args.epochs)
     return model
 
+def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_epochs=25):
+    since = time.time()
+
+    best_model_wts = copy.deepcopy(model.state_dict())
+    best_acc = 0.0
+
+    # Calculate R
+    Rs = []
+    for i in range(len(class_names)):
+        Rs.append([])
+    model.eval()
+    for inputs, labels in dataloaders['train']:
+        for index in range(len(inputs)):
+            r = model.get_r(inputs[index].unsqueeze_(0))
+            Rs[labels[index]].append(r.squeeze())
+    for i in range(len(class_names)):
+        rmean = torch.mean(torch.stack(Rs[i]), dim=0)
+        Rs[i].append(rmean)
+        Rs[i] = torch.stack(Rs[i])
+    
+    for epoch in range(num_epochs):
+        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
+        print('-' * 10)
+
+        # Each epoch has a training and validation phase
+        for phase in ['train', 'val']:
+            if phase == 'train':
+                scheduler.step()
+                model.train()  # Set model to training mode
+            else:
+                model.eval()   # Set model to evaluate mode
+
+            running_loss = 0.0
+            running_corrects = 0
+
+            # Iterate over data.
+            for inputs, labels in dataloaders[phase]:
+                inputs = inputs.to(device)
+                labels = labels.to(device)
+
+                # zero the parameter gradients
+                optimizer.zero_grad()
+
+                # forward
+                # track history if only in train
+                with torch.set_grad_enabled(phase == 'train'):
+                    R = []
+                    for i in range(len(class_names)):
+                        index = np.random.randint(low=0, high=Rs[i].shape[0])
+                        R.append(Rs[i][index])
+                    R = torch.stack(R)
+                    if phase == 'train':
+                        outputs = model(inputs, R)
+                    else:
+                        outputs = model.forward_test(inputs, Rs)
+                    _, preds = torch.max(outputs, 1)
+                    loss = criterion(outputs, labels)
+
+                    # backward + optimize only if in training phase
+                    if phase == 'train':
+                        loss.backward()
+                        optimizer.step()
+
+                # statistics
+                running_loss += loss.item() * inputs.size(0)
+                running_corrects += torch.sum(preds == labels.data)
+
+            epoch_loss = running_loss / dataset_sizes[phase]
+            epoch_acc = running_corrects.double() / dataset_sizes[phase]
+
+            print('{} Loss: {:.4f} Acc: {:.4f}'.format(
+                phase, epoch_loss, epoch_acc))
+
+            # deep copy the model
+            if phase == 'val' and epoch_acc > best_acc:
+                best_acc = epoch_acc
+                best_model_wts = copy.deepcopy(model.state_dict())
+
+        print('')
+
+    time_elapsed = time.time() - since
+    print('Training complete in {:.0f}m {:.0f}s'.format(
+        time_elapsed // 60, time_elapsed % 60))
+    print('Best val Acc: {:4f}'.format(best_acc))
+
+    # load best model weights
+    model.load_state_dict(best_model_wts)
+    return model
+
+def predict_param():
+    model = ParamLearner()
+        
+    model = model.to(device)
+
+    criterion = nn.CrossEntropyLoss()
+
+    optimizer = optim.SGD(model.param_learner.parameters(), lr=args.lr, momentum=args.momentum)
+
+    # Decay LR by a factor of 0.1 every 7 epochs
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=args.step_size, gamma=0.1)
+    
+    model = train_model_for_predict_param(model, criterion, optimizer,
+                        exp_lr_scheduler, num_epochs=args.epochs)
+    return model
+
 if __name__ == '__main__':
     if args.prefix == '':
         print('Please specify args.prefix!')
     else:
-        model = baseline()
+        model = predict_param()
         torch.save(model.state_dict(), '%s.pth' % args.prefix)
