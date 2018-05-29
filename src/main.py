@@ -275,6 +275,35 @@ def predict_param():
                         exp_lr_scheduler, num_epochs=args.epochs)
     return model
 
+def KNN():
+    model = models.alexnet(pretrained=True)
+    # Delete last fc layer
+    model.classifier.__delitem__(6)
+    for param in model.parameters():
+        param.requires_grad = False
+    model = model.to(device)
+    model.eval()
+    since = time.time()
+    feature = []
+    label = []
+    # Iterate over data.
+    for inputs, labels in dataloaders['train']:
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        ft = model(inputs)
+        feature.append(ft)
+        label.append(labels)
+    feature = torch.cat(feature, dim=0)
+    label = torch.cat(label, dim=0)
+    print('feature shape: ', feature.shape)
+    print('label shape:', label.shape)
+    time_elapsed = time.time() - since
+    print('\nTraining complete in {:.0f}m {:.0f}s'.format(
+        time_elapsed // 60, time_elapsed % 60))
+
+    return {'feature':feature, 'label': label}
+
+
 if __name__ == '__main__':
     if args.prefix == '':
         raise ValueError('Please specify args.prefix!')
@@ -282,8 +311,10 @@ if __name__ == '__main__':
         raise ValueError('args.arch %s not in [baseline, parampred, knn]'%args.arch)
     if args.arch == 'baseline':
         model = baseline()
+        torch.save(model.state_dict(), 'baseline_%s.pth' % args.prefix)
     elif args.arch == 'parampred':
         model = predict_param()
-    else: # TODO: KNN
-        model = baseline()
-    torch.save(model.state_dict(), '%s.pth' % args.prefix)
+        torch.save(model.state_dict(), 'parampred_%s.pth' % args.prefix)
+    else:
+        feature = KNN()
+        torch.save(feature, 'knn_%s.pth' % args.prefix)
