@@ -25,6 +25,8 @@ parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
 parser.add_argument('-b', '--batch-size', default=4, type=int,
                     metavar='N', help='mini-batch size (default: 4)')
+parser.add_argument('-k', default=5, type=int,
+                    metavar='K', help='KNN param')
 parser.add_argument('--lr', '--learning-rate', default=0.001, type=float,
                     metavar='LR', help='initial learning rate')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
@@ -35,8 +37,8 @@ parser.add_argument('--prefix', type=str, metavar='MODEL_NAME', default='',
                     help='save trained model with this name')
 parser.add_argument('--arch', type=str, metavar='MODEL_ARCH', default='parampred',
                     help='model arch: (baseline, parampred, knn)')
-# parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
-#                     help='evaluate model on validation set')
+parser.add_argument('--ckpt', type=str, metavar='MODEL',
+                    help='checkpoint name')
 # parser.add_argument('--resume', default='', type=str, metavar='PATH',
 #                     help='path to latest checkpoint (default: none)')
 args = parser.parse_args()
@@ -67,7 +69,7 @@ image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
                                           data_transforms[x])
                   for x in ['train', 'val']}
 dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=args.batch_size,
-                                             shuffle=True, num_workers=args.workers)
+                                             shuffle=True if x=='train' else False, num_workers=args.workers)
               for x in ['train', 'val']}
 dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
 class_names = image_datasets['train'].classes
@@ -275,6 +277,10 @@ def predict_param():
                         exp_lr_scheduler, num_epochs=args.epochs)
     return model
 
+def predict_param_val():
+    # TODO
+    pass
+
 def KNN():
     model = models.alexnet(pretrained=True)
     # Delete last fc layer
@@ -303,18 +309,75 @@ def KNN():
 
     return {'feature':feature, 'label': label}
 
+def find_knn(X, selfX, selfY, k):
+    # l2 dist
+    num_test = X.shape[0]
+    num_train = selfX.shape[0]
+    dists = torch.sum(selfX**2, dim=1)\
+          + torch.sum(X**2, dim=1).view((num_test,1))\
+          - 2*X.mm(selfX.t())
+    y_pred = torch.zeros(num_test, dtype=torch.long)
+    for i in range(num_test):
+        _, ind = torch.sort(dists[i])
+        closest_y = selfY[ind[:k]]
+        y_pred[i] = np.bincount(closest_y.cpu().data.numpy()).argmax()
+    return y_pred
+
+def KNN_val(data):
+    feature, label = data['feature'], data['label']
+    feature = feature.to(device)
+    label = label.to(device)
+    since = time.time()
+    model = models.alexnet(pretrained=True)
+    # Delete last fc layer
+    model.classifier.__delitem__(6)
+    for param in model.parameters():
+        param.requires_grad = False
+    model = model.to(device)
+    model.eval()
+    result = []
+    running_corrects = 0
+
+    # Iterate over data.
+    for inputs, labels in dataloaders['val']:
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        outputs = model(inputs)
+        preds = find_knn(outputs, feature, label, args.k)
+        # statistics
+        running_corrects += torch.sum(preds == labels.data)
+        result.append(preds)
+
+    epoch_acc = running_corrects.double() / dataset_sizes['val']
+    time_elapsed = time.time() - since
+    print('Validation complete in {:.0f}m {:.0f}s Acc: {:.4f}'.format(
+        time_elapsed // 60, time_elapsed % 60, epoch_acc))
+
+    return torch.cat(result, dim=0)
+
 
 if __name__ == '__main__':
-    if args.prefix == '':
-        raise ValueError('Please specify args.prefix!')
     if args.arch not in ['baseline', 'parampred', 'knn']:
         raise ValueError('args.arch %s not in [baseline, parampred, knn]'%args.arch)
-    if args.arch == 'baseline':
-        model = baseline()
-        torch.save(model.state_dict(), 'baseline_%s.pth' % args.prefix)
-    elif args.arch == 'parampred':
-        model = predict_param()
-        torch.save(model.state_dict(), 'parampred_%s.pth' % args.prefix)
+    if args.prefix == '' and args.ckpt is None:
+        raise ValueError('Please specify args.prefix!')
+    if args.ckpt is None:
+        # train
+        if args.arch == 'baseline':
+            model = baseline()
+            torch.save(model.state_dict(), 'baseline_%s.pth' % args.prefix)
+        elif args.arch == 'parampred':
+            model = predict_param()
+            torch.save(model.state_dict(), 'parampred_%s.pth' % args.prefix)
+        else:
+            feature = KNN()
+            torch.save(feature, 'knn_%s.pth' % args.prefix)
     else:
-        feature = KNN()
-        torch.save(feature, 'knn_%s.pth' % args.prefix)
+        # val
+        model = torch.load(args.ckpt)
+        if args.arch == 'baseline':
+            labels = baseline_val(model)
+        elif args.arch == 'parampred':
+            labels = predict_param_val(model)
+        else:
+            labels = KNN_val(model)
