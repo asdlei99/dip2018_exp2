@@ -25,7 +25,7 @@ parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
 parser.add_argument('-b', '--batch-size', default=4, type=int,
                     metavar='N', help='mini-batch size (default: 4)')
-parser.add_argument('-k', default=5, type=int,
+parser.add_argument('-k', default=1, type=int,
                     metavar='K', help='KNN param')
 parser.add_argument('--lr', '--learning-rate', default=0.001, type=float,
                     metavar='LR', help='initial learning rate')
@@ -309,8 +309,7 @@ def KNN():
 
     return {'feature':feature, 'label': label}
 
-def find_knn(X, selfX, selfY, k):
-    # l2 dist
+def find_knn_l2(X, selfX, selfY, k):
     num_test = X.shape[0]
     num_train = selfX.shape[0]
     dists = torch.sum(selfX**2, dim=1)\
@@ -320,6 +319,18 @@ def find_knn(X, selfX, selfY, k):
     for i in range(num_test):
         _, ind = torch.sort(dists[i])
         closest_y = selfY[ind[:k]]
+        y_pred[i] = np.bincount(closest_y.cpu().data.numpy()).argmax()
+    return y_pred
+
+def find_knn_cos(X, selfX, selfY, k):
+    num_test = X.shape[0]
+    num_train = selfX.shape[0]
+    y_pred = torch.zeros(num_test, dtype=torch.long)
+    cos = nn.CosineSimilarity(dim=1, eps=1e-6)
+    for i in range(num_test):
+        dists = cos(X[i:i+1], selfX)
+        _, ind = torch.sort(dists)
+        closest_y = selfY[ind[-k:]]
         y_pred[i] = np.bincount(closest_y.cpu().data.numpy()).argmax()
     return y_pred
 
@@ -343,7 +354,7 @@ def KNN_val(data):
         inputs = inputs.to(device)
         labels = labels.to(device)
         outputs = model(inputs)
-        preds = find_knn(outputs, feature, label, args.k)
+        preds = find_knn_cos(outputs, feature, label, args.k)
         # statistics
         running_corrects += torch.sum(preds == labels.data)
         result.append(preds)
