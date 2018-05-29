@@ -33,6 +33,8 @@ parser.add_argument('--step_size', default=7, type=int,
                     metavar='N', help='Decay LR by a factor of 0.1 every N epochs')
 parser.add_argument('--prefix', type=str, metavar='MODEL_NAME', default='',
                     help='save trained model with this name')
+parser.add_argument('--arch', type=str, metavar='MODEL_ARCH', default='parampred',
+                    help='model arch: (baseline, parampred, knn)')
 # parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
 #                     help='evaluate model on validation set')
 # parser.add_argument('--resume', default='', type=str, metavar='PATH',
@@ -275,7 +277,13 @@ def predict_param():
 
 if __name__ == '__main__':
     if args.prefix == '':
-        print('Please specify args.prefix!')
-    else:
+        raise ValueError('Please specify args.prefix!')
+    if args.arch not in ['baseline', 'parampred', 'knn']:
+        raise ValueError('args.arch %s not in [baseline, parampred, knn]'%args.arch)
+    if args.arch == 'baseline':
+        model = baseline()
+    elif args.arch == 'parampred':
         model = predict_param()
-        torch.save(model.state_dict(), '%s.pth' % args.prefix)
+    else: # TODO: KNN
+        model = baseline()
+    torch.save(model.state_dict(), '%s.pth' % args.prefix)
