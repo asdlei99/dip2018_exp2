@@ -277,9 +277,53 @@ def predict_param():
                         exp_lr_scheduler, num_epochs=args.epochs)
     return model
 
-def predict_param_val():
-    # TODO
-    pass
+def predict_param_val(model_ckpt):
+    since = time.time()
+    
+    model = ParamLearner()
+    model = model.to(device)
+    model.load_state_dict(model_ckpt)
+    model.eval()
+
+    # Calculate R
+    Rs = []
+    for i in range(len(class_names)):
+        Rs.append([])
+    for inputs, labels in dataloaders['train']:
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        for index in range(len(inputs)):
+            r = model.get_r(inputs[index].unsqueeze_(0))
+            Rs[labels[index]].append(r.squeeze())
+    for i in range(len(class_names)):
+        rmean = torch.mean(torch.stack(Rs[i]), dim=0)
+        Rs[i].append(rmean)
+        Rs[i] = torch.stack(Rs[i])
+    
+    running_corrects = 0
+
+    # Iterate over data. 
+    for inputs, labels in dataloaders['val']:
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+
+        # forward
+        R = []
+        for i in range(len(class_names)):
+            index = np.random.randint(low=0, high=Rs[i].shape[0])
+            R.append(Rs[i][index])
+        R = torch.stack(R)
+        outputs = model.forward_test(inputs, Rs)
+        _, preds = torch.max(outputs, 1)
+
+        # statistics
+        running_corrects += torch.sum(preds == labels.data)
+        
+    acc = running_corrects.double() / dataset_sizes['val']
+
+    print('Checkpoint: {}, Acc: {:.4f}'.format(args.ckpt, acc))
+
+    print('')
 
 def KNN():
     model = models.alexnet(pretrained=True)
