@@ -170,6 +170,40 @@ def baseline():
                         exp_lr_scheduler, num_epochs=args.epochs)
     return model
 
+def baseline_val(model_ckpt):
+    since = time.time()
+    
+    alexnet = models.alexnet(pretrained=True)
+    for param in alexnet.parameters():
+        param.requires_grad = False
+
+    # Parameters of newly constructed modules have requires_grad=True by default
+    num_ftrs = alexnet.classifier[6].in_features
+    alexnet.classifier[6] = nn.Linear(num_ftrs, len(class_names))
+
+    alexnet = alexnet.to(device)
+    alexnet.load_state_dict(model_ckpt)
+    alexnet.eval()
+
+    running_corrects = 0
+
+    # Iterate over data. 
+    for inputs, labels in dataloaders['val']:
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        outputs = alexnet(inputs)
+        _, preds = torch.max(outputs, 1)
+
+        # statistics
+        running_corrects += torch.sum(preds == labels.data)
+        
+    acc = running_corrects.double() / dataset_sizes['val']
+
+    print('Checkpoint: {}, Acc: {:.4f}'.format(args.ckpt, acc))
+
+    print('')
+
+
 def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
 
