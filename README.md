@@ -1,5 +1,17 @@
 # dip2018_exp2
 
+## feature的处理
+
+```
+import numpy as np
+d = np.load('src/feature.npy').item()
+print(d)
+# 会看到 feature 和 label
+feature = d['feature']
+label = d['label]
+# TODO
+```
+
 ## requirements
 
 python: 兼容>=2.7和>=3.5 （请注意//和/的用法和print的用法，print最好用format）
