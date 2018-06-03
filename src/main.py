@@ -71,7 +71,7 @@ image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
                                           data_transforms[x])
                   for x in ['train', 'val']}
 dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=args.batch_size,
-                                             shuffle=True if x=='train' else False, num_workers=args.workers)
+                                             shuffle=True if x=='train' and args.arch != 'knn' else False, num_workers=args.workers)
               for x in ['train', 'val']}
 dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
 class_names = image_datasets['train'].classes
@@ -436,7 +436,7 @@ def KNN_val(data):
         outputs = model(inputs)
         preds = find_knn_cos(outputs, feature, label, args.k)
         # statistics
-        running_corrects += torch.sum(preds == labels.data)
+        running_corrects += torch.sum(preds.to(device) == labels.data)
         result.append(preds)
 
     epoch_acc = running_corrects.double() / dataset_sizes['val']
