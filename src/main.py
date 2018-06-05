@@ -19,7 +19,7 @@ parser.add_argument('-d','--data', metavar='DIR', type=str, default='../data',
                     help='path to dataset')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
-parser.add_argument('--epochs', default=25, type=int, metavar='N',
+parser.add_argument('--epochs', default=100, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
@@ -41,8 +41,10 @@ parser.add_argument('--ckpt', type=str, metavar='MODEL',
                     help='checkpoint name')
 parser.add_argument('--drop_rate', default=0.5, type=float,
                     metavar='dp', help='Dropout rate')
-parser.add_argument('--use_special_loader', default=True, type=bool,
-                    metavar='sl', help='Use Special Loader or Not')
+parser.add_argument('--use_special_loader', dest='special_loader', action='store_true')
+parser.add_argument('--no_use_special_loader', dest='special_loader', action='store_false')
+parser.set_defaults(special_loader=True)
+
 # parser.add_argument('--resume', default='', type=str, metavar='PATH',
 #                     help='path to latest checkpoint (default: none)')
 args = parser.parse_args()
@@ -220,7 +222,7 @@ def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_ep
 
     # Building own dataset
     train_data_loader = ParamLearnerDataLoader(image_datasets['train'], len(class_names))
-    if args.use_special_loader:
+    if args.special_loader:
         print('use special loader')
         dataloaders['train'] = train_data_loader
 
