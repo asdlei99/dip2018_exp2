@@ -39,6 +39,10 @@ parser.add_argument('--arch', type=str, metavar='MODEL_ARCH', default='parampred
                     help='model arch: (baseline, parampred, knn)')
 parser.add_argument('--ckpt', type=str, metavar='MODEL',
                     help='checkpoint name')
+parser.add_argument('--drop_rate', default=0.5, type=float,
+                    metavar='dp', help='Dropout rate')
+parser.add_argument('--use_special_loader', default=True, type=bool,
+                    metavar='sl', help='Use Special Loader or Not')
 # parser.add_argument('--resume', default='', type=str, metavar='PATH',
 #                     help='path to latest checkpoint (default: none)')
 args = parser.parse_args()
@@ -63,17 +67,19 @@ val_arg = [
 data_transforms = {
     'train': transforms.Compose(train_arg if args.arch != 'knn' else val_arg),
     'val': transforms.Compose(val_arg),
+    'stable_train': transforms.Compose(val_arg)
 }
 
 data_dir = args.data
 # data_dir = '../material/hymenoptera_data'
-image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
+folder_dict = {'train': 'train', 'stable_train': 'train', 'val': 'val'}
+image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, folder_dict[x]),
                                           data_transforms[x])
-                  for x in ['train', 'val']}
+                  for x in ['train', 'stable_train', 'val']}
 dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=args.batch_size,
                                              shuffle=True if x=='train' and args.arch != 'knn' else False, num_workers=args.workers)
-              for x in ['train', 'val']}
-dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
+              for x in ['train', 'stable_train', 'val']}
+dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'stable_train', 'val']}
 class_names = image_datasets['train'].classes
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -84,6 +90,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
+
+    # Build my own dataset
+    
 
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
@@ -209,6 +218,12 @@ def baseline_val(model_ckpt):
 def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
 
+    # Building own dataset
+    train_data_loader = ParamLearnerDataLoader(image_datasets['train'], len(class_names))
+    if args.use_special_loader:
+        print('use special loader')
+        dataloaders['train'] = train_data_loader
+
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
 
@@ -217,7 +232,7 @@ def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_ep
     for i in range(len(class_names)):
         Rs.append([])
     model.eval()
-    for inputs, labels in dataloaders['train']:
+    for inputs, labels in dataloaders['stable_train']:
         inputs = inputs.to(device)
         labels = labels.to(device)
         for index in range(len(inputs)):
@@ -227,6 +242,7 @@ def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_ep
         rmean = torch.mean(torch.stack(Rs[i]), dim=0)
         Rs[i].append(rmean)
         Rs[i] = torch.stack(Rs[i])
+        Rs[i].requires_grad = False
     
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
@@ -298,7 +314,7 @@ def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_ep
     return model
 
 def predict_param():
-    model = ParamLearner()
+    model = ParamLearner(drop_rate=args.drop_rate)
         
     model = model.to(device)
 
@@ -325,7 +341,7 @@ def predict_param_val(model_ckpt):
     Rs = []
     for i in range(len(class_names)):
         Rs.append([])
-    for inputs, labels in dataloaders['train']:
+    for inputs, labels in dataloaders['stable_train']:
         inputs = inputs.to(device)
         labels = labels.to(device)
         for index in range(len(inputs)):
@@ -344,11 +360,6 @@ def predict_param_val(model_ckpt):
         labels = labels.to(device)
 
         # forward
-        R = []
-        for i in range(len(class_names)):
-            index = np.random.randint(low=0, high=Rs[i].shape[0])
-            R.append(Rs[i][index])
-        R = torch.stack(R)
         outputs = model.forward_test(inputs, Rs)
         _, preds = torch.max(outputs, 1)
 
