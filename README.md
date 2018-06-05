@@ -8,7 +8,7 @@ d = np.load('src/feature.npy').item()
 print(d)
 # 会看到 feature 和 label
 feature = d['feature']
-label = d['label]
+label = d['label']
 # TODO
 ```
 
