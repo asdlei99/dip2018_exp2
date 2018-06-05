@@ -1,0 +1,458 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>清华大学云盘</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="File Collaboration Team Organization" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<link rel="shortcut icon" href="/media/img/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="/media/assets/css/bootstrap.min.b00faad199b5.css"/>
+<link rel="stylesheet" type="text/css" href="/media/css/jstree_default_theme/style.min.css" />
+<link rel="stylesheet" type="text/css" href="/media/assets/css/magnific-popup.656241b2c8ed.css" />
+<link rel="stylesheet" type="text/css" href="/media/css/seahub.min.css?t=1524196638" />
+
+
+</head>
+
+<body>
+    <div id="wrapper" class="en">
+        
+        
+        
+
+        <div id="header" class="navbar navbar-fixed-top">
+            <div id="header-inner">
+                
+                <a href="/" id="logo" class="fleft">
+                    
+                    <img src="/media/custom/mylogo.png" title="清华大学云盘" alt="logo" width="128" height="32" />
+                    
+                </a>
+                <button class="sf2-icon-list-view side-nav-toggle hidden-md-up hide" title="Side Nav Menu" id="js-toggle-side-nav" aria-label="Side Nav Menu"></button>
+
+                
+                 
+                <div class="fright" id="lang">
+                    <a href="#" id="lang-context" data-lang="en">English <span class="icon-caret-down"></span></a>
+                    <div id="lang-context-selector" class="sf-popover hide">
+                        <ul class="sf-popover-con">
+                            
+                            <li><a href="/i18n/?lang=ca">Català</a></li>
+                            
+                            <li><a href="/i18n/?lang=cs">Čeština</a></li>
+                            
+                            <li><a href="/i18n/?lang=de">Deutsch</a></li>
+                            
+                            <li><a href="/i18n/?lang=en">English</a></li>
+                            
+                            <li><a href="/i18n/?lang=es">Español</a></li>
+                            
+                            <li><a href="/i18n/?lang=es-ar">Español de Argentina</a></li>
+                            
+                            <li><a href="/i18n/?lang=es-mx">Español de México</a></li>
+                            
+                            <li><a href="/i18n/?lang=fr">Français</a></li>
+                            
+                            <li><a href="/i18n/?lang=it">Italiano</a></li>
+                            
+                            <li><a href="/i18n/?lang=is">Íslenska</a></li>
+                            
+                            <li><a href="/i18n/?lang=lv">Latvian</a></li>
+                            
+                            <li><a href="/i18n/?lang=hu">Magyar</a></li>
+                            
+                            <li><a href="/i18n/?lang=nl">Nederlands</a></li>
+                            
+                            <li><a href="/i18n/?lang=pl">Polski</a></li>
+                            
+                            <li><a href="/i18n/?lang=pt-br">Portuguese, Brazil</a></li>
+                            
+                            <li><a href="/i18n/?lang=ru">Русский</a></li>
+                            
+                            <li><a href="/i18n/?lang=sl">Slovenian</a></li>
+                            
+                            <li><a href="/i18n/?lang=fi">Suomi</a></li>
+                            
+                            <li><a href="/i18n/?lang=sv">Svenska</a></li>
+                            
+                            <li><a href="/i18n/?lang=vi">Tiếng Việt</a></li>
+                            
+                            <li><a href="/i18n/?lang=tr">Türkçe</a></li>
+                            
+                            <li><a href="/i18n/?lang=uk">українська мова</a></li>
+                            
+                            <li><a href="/i18n/?lang=he">עברית</a></li>
+                            
+                            <li><a href="/i18n/?lang=ar">العربية</a></li>
+                            
+                            <li><a href="/i18n/?lang=el">ελληνικά</a></li>
+                            
+                            <li><a href="/i18n/?lang=th">ไทย</a></li>
+                            
+                            <li><a href="/i18n/?lang=ko">한국어</a></li>
+                            
+                            <li><a href="/i18n/?lang=ja">日本語</a></li>
+                            
+                            <li><a href="/i18n/?lang=zh-cn">简体中文</a></li>
+                            
+                            <li><a href="/i18n/?lang=zh-tw">繁體中文</a></li>
+                            
+                        </ul>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+
+        <div id="main" class="clear container-fluid top-padding">
+            
+<div id="wide-panel-noframe" class="row">
+    <div class="col-md-10 col-md-offset-1">
+        
+    
+
+    <h2>caltech256</h2>
+    <p>Shared by: 翁家翌</p>
+
+    <div class="repo-file-list-topbar ovhd">
+        <p class="path fleft">
+        Current path: 
+        
+        
+        caltech256
+        
+        
+        </p>
+
+        <div class="fright">
+            <a href="?p=/&mode=list" title="List" aria-label="List" class="mode-link vam cur-mode-link list-mode-link">
+                
+                    <img src="/media/img/list-white.png" alt="List" width="20" />
+                
+            </a><a href="?p=/&mode=grid" title="Grid" aria-label="Grid" class="mode-link vam">
+                
+                    <img src="/media/img/grid.png" alt="Grid" width="20" />
+                
+            </a>
+            
+            <a href="#" class="obv-btn vam shared-dir-zip">ZIP</a>
+            
+        </div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th width="5%"></th>
+                <th width="55%">Name</th>
+                <th width="14%">Size</th>
+                <th width="16%">Last Update</th>
+                <th width="10%">Operations</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            
+
+            
+            <tr class="file-item" data-name="256_ObjectCategories.tar" >
+                
+                <td class="alc"><img src="/media/img/file/24/file.png" alt="File" /></td>
+                
+
+                <td>
+                    
+                    <a class="normal" href="/d/79be83f342604b1f9f45/files/?p=/256_ObjectCategories.tar">256_ObjectCategories.tar</a>
+                    
+                </td>
+
+                <td>1.1 GB</td>
+                <td><time datetime="2018-05-29T19:28:51" is="relative-time" title="Tue, 29 May 2018 19:28:51 +0800" >3 days ago</time></td>
+                <td>
+                    
+                    <a class="op-icon vh" href="/d/79be83f342604b1f9f45/files/?p=/256_ObjectCategories.tar&dl=1" title="Download" aria-label="Download">
+                        <img src="/media/img/download.png" alt="Download" />
+                    </a>
+                    
+                </td>
+            </tr>
+            
+            <tr class="file-item" data-name="parampred_test1000.pth" >
+                
+                <td class="alc"><img src="/media/img/file/24/file.png" alt="File" /></td>
+                
+
+                <td>
+                    
+                    <a class="normal" href="/d/79be83f342604b1f9f45/files/?p=/parampred_test1000.pth">parampred_test1000.pth</a>
+                    
+                </td>
+
+                <td>281.5 MB</td>
+                <td><time datetime="2018-06-01T10:10:25" is="relative-time" title="Fri, 1 Jun 2018 10:10:25 +0800" >1 day ago</time></td>
+                <td>
+                    
+                    <a class="op-icon vh" href="/d/79be83f342604b1f9f45/files/?p=/parampred_test1000.pth&dl=1" title="Download" aria-label="Download">
+                        <img src="/media/img/download.png" alt="Download" />
+                    </a>
+                    
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+    
+
+    </div>
+</div>
+
+
+            
+            <div id="confirm-popup" class="hide">
+                <div id="confirm-con"></div>
+                <button id="confirm-yes">Yes</button>
+                <button class="simplemodal-close">No</button>
+            </div>
+        </div>
+
+</div><!-- wrapper -->
+
+<script type="text/javascript" src="/media/js/jquery-1.12.1.min.js" id="jquery"></script>
+<script type="text/javascript" src="/media/assets/scripts/lib/jquery.simplemodal.67fb20a63282.js"></script>
+<script type="text/javascript" src="/media/assets/scripts/lib/jquery.ui.tabs.7406a3c5d2e3.js"></script>
+<script type="text/javascript" src="/media/assets/scripts/lib/jstree.min.baba5642f663.js"></script>
+<script type="text/javascript" src="/media/js/jq.min.js"></script>
+<script type="text/javascript" src="/media/js/base.js?t=1524196638"></script>
+<script type="text/javascript">
+function ajaxErrorHandler(xhr, textStatus, errorThrown) {
+    if (xhr.responseText) {
+        feedback($.parseJSON(xhr.responseText).error||$.parseJSON(xhr.responseText).error_msg, 'error');
+    } else {
+        feedback("Failed. Please check the network.", 'error');
+    }
+}
+ 
+(function() {
+    var lang_context = $('#lang-context'),
+        lang_selector = $('#lang-context-selector');
+
+    lang_context.parent().css({'position':'relative'});
+
+    if ($('#header').is(':visible')) { // for login page
+        lang_selector.css({
+            'top': lang_context.position().top + lang_context.height() + 5,
+            'right': 0
+        });
+    }
+
+    var setLangSelectorMaxHeight = function() {
+        if ($('#header').is(':visible')) { // for login page
+            $('.sf-popover-con', lang_selector).css({
+                'max-height': $(window).height() - lang_selector.offset().top - 12
+            });
+        }
+    };
+    $(window).resize(function() {
+        if (lang_selector.is(':visible')) {
+            setLangSelectorMaxHeight();
+        }
+    });
+
+    lang_context.click(function() {
+        lang_selector.toggleClass('hide');
+        if (lang_selector.is(':visible')) {
+            setLangSelectorMaxHeight();
+        }
+        return false;
+    });
+
+    $(document).click(function(e) {
+        var element = e.target || e.srcElement;
+        if (element.id != 'lang-context-selector' && element.id != 'lang-context') {
+            lang_selector.addClass('hide');
+        }
+    });
+})();
+
+
+if ($('.side-nav').length) {
+    $('#logo').addClass('hidden-sm-down');
+    $('#js-toggle-side-nav').removeClass('hide');
+}
+$('#js-toggle-side-nav').click(function() {
+    $('.side-nav').css({'left': 0});
+    return false;
+});
+$('.js-close-side-nav').click(function() {
+    $('.side-nav').css({'left': '-300px'});
+    return false;
+});
+$(window).resize(function() {
+    if ($(window).width() >= 768) {
+        $('.side-nav').css({'left': 0});
+    }
+});
+</script>
+
+<script type="text/javascript" src="/media/assets/scripts/lib/jquery.magnific-popup.46e3906a2c4d.js"></script>
+<script type="text/javascript">
+var cur_path = '/';
+var share_link_token = '79be83f342604b1f9f45';
+var file_server_root = 'https://cloud.tsinghua.edu.cn/seafhttp/';
+
+var magnificOptions = {
+    type: 'image',
+    tClose: "Close (Esc)", // Alt text on close button
+    tLoading: "Loading...", // Text that is displayed during loading. Can contain %curr% and %total% keys
+    gallery: {
+        enabled: true,
+        tPrev: "Previous (Left arrow key)", // Alt text on left arrow
+        tNext: "Next (Right arrow key)", // Alt text on right arrow
+        tCounter: "%curr% of %total%" // Markup for "1 of 7" counter
+    },
+    image: {
+        titleSrc: function(item) {
+            var $el = item.el;
+            var img_name = HTMLescape($el.closest('.file-item').attr('data-name'));
+            var img_link = '<a href="' + $el.attr('href') + '" target="_blank">' + "Open in New Tab" + '</a>';
+            return img_name + '<br />' + img_link;
+        },
+        tError: '<a href="%url%" target="_blank">The image</a> could not be loaded.' // Error message when image could not be loaded
+    }
+};
+
+
+$('[data-mfp-src]').each(function(index, item) {
+    var $item = $(item);
+    var file_name = $item.closest('.file-item').attr('data-name');
+    var file_ext = file_name.substr(file_name.lastIndexOf('.') + 1).toLowerCase();
+    var is_gif = file_ext == 'gif' ? true : false;
+    if (!is_gif) {
+        $item.attr('data-mfp-src', '/thumbnail/79be83f342604b1f9f45/1024' + encodePath(cur_path + file_name));
+    }
+});
+
+$('.img-name-link').magnificPopup(magnificOptions);
+$('.img-img-link').magnificPopup(magnificOptions);
+
+
+
+$('.shared-dir-zip, .download-dir').click(function (e) {
+    var cur_download_dir_path;
+    var interval,
+        zip_token,
+        queryZipProgress;
+    var packagingTip = "Packaging...";
+    var $tip = $('<p></p>');
+
+    if ($(this).hasClass("shared-dir-zip")) {
+        cur_download_dir_path = cur_path;
+    } else {
+        cur_download_dir_path = cur_path + $(this).attr('data-name');
+    }
+
+    queryZipProgress = function() {
+        $.ajax({
+            url: '/api/v2.1/query-zip-progress/' + '?token=' + zip_token,
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                var progress = data.total == 0 ? '100%' : (data.zipped/data.total*100).toFixed(2) + '%';
+                $tip.html(packagingTip + ' ' + progress);
+                if (data['total'] == data['zipped']) {
+                    setTimeout(function() { $.modal.close(); }, 500);
+                    clearInterval(interval);
+                    location.href = file_server_root + 'zip/' + zip_token;
+                }
+            },
+            error: function(xhr) {
+                if (xhr.responseText) {
+                    feedback($.parseJSON(xhr.responseText).error_msg, 'error');
+                } else {
+                    feedback("Failed. Please check the network.", 'error');
+                }
+                clearInterval(interval);
+            }
+        });
+    };
+
+    $.ajax({
+        url: '/api/v2.1/share-link-zip-task/' + '?share_link_token=' + share_link_token + '&path=' + encodeURIComponent(cur_download_dir_path),
+        cache: false,
+        dataType: 'json',
+        success: function(data) {
+            zip_token = data['zip_token'];
+            $tip.html(packagingTip).modal();
+            $('#simplemodal-container').css({'width':'auto'});
+            queryZipProgress();
+            interval = setInterval(queryZipProgress, 1000);
+        },
+        error: function(xhr) {
+            if (xhr.responseText) {
+                feedback($.parseJSON(xhr.responseText).error_msg, 'error');
+            } else {
+                feedback("Failed. Please check the network.", 'error');
+            }
+        }
+    });
+
+    return false;
+});
+
+
+
+// get thumbnails for image files
+
+$(function() {
+    var img_icons = $('.not-thumbnail');
+    if (img_icons.length == 0) {
+        return;
+    }
+    var get_thumbnail = function(i) {
+        var img_icon = $(img_icons[i]),
+            file_name = img_icon.closest('.file-item').attr('data-name');
+        $.ajax({
+            url: '/thumbnail/79be83f342604b1f9f45/create/?path=' + e(cur_path + file_name) + '&size=48',
+            cache: false,
+            dataType: 'json',
+            success: function(data) {
+                if (data) {
+                    img_icon.attr("src", '/' + data.encoded_thumbnail_src).load(function() {
+                        $(this).removeClass("not-thumbnail").addClass("thumbnail")
+                        .removeAttr('width'); // for grid view
+                    });
+                }
+            },
+            complete: function() {
+                // cur_path may be changed. e.g., the user enter another directory
+                if (i < img_icons.length - 1) {
+                    get_thumbnail(++i);
+                }
+            }
+        });
+    };
+    get_thumbnail(0);
+});
+
+
+$('.grid-item').hover(
+    function () {
+        $('.img-link, .text-link', $(this)).addClass('hl');
+        $('.op-icon', $(this)).removeClass('vh');
+    },
+    function () {
+        $('.img-link, .text-link', $(this)).removeClass('hl');
+        $('.op-icon', $(this)).addClass('vh');
+    }
+);
+</script>
+
+</body>
+</html>
