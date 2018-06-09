@@ -485,3 +485,6 @@ if __name__ == '__main__':
             labels = predict_param_val(model)
         else:
             labels = KNN_val(model)
+        with open('result.txt','w') as f:
+            for i in labels:
+                f.write('%d\n'%(i+1))
