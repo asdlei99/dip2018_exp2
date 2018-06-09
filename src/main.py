@@ -199,7 +199,7 @@ def baseline_val(model_ckpt):
     alexnet.eval()
 
     running_corrects = 0
-
+    result = []
     # Iterate over data. 
     for inputs, labels in dataloaders['val']:
         inputs = inputs.to(device)
@@ -209,12 +209,14 @@ def baseline_val(model_ckpt):
 
         # statistics
         running_corrects += torch.sum(preds == labels.data)
+        result.append(preds)
         
     acc = running_corrects.double() / dataset_sizes['val']
 
     print('Checkpoint: {}, Acc: {:.4f}'.format(args.ckpt, acc))
 
     print('')
+    return torch.cat(result, dim=0)
 
 
 def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_epochs=25):
