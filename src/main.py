@@ -338,6 +338,7 @@ def predict_param_val(model_ckpt):
     model = model.to(device)
     model.load_state_dict(model_ckpt)
     model.eval()
+    result = []
 
     # Calculate R
     Rs = []
@@ -367,12 +368,14 @@ def predict_param_val(model_ckpt):
 
         # statistics
         running_corrects += torch.sum(preds == labels.data)
+        result.append(preds)
         
     acc = running_corrects.double() / dataset_sizes['val']
 
     print('Checkpoint: {}, Acc: {:.4f}'.format(args.ckpt, acc))
 
     print('')
+    return torch.cat(result, dim=0)
 
 def KNN():
     model = models.alexnet(pretrained=True)
