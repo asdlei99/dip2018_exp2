@@ -209,8 +209,8 @@ def baseline_val(model_ckpt):
 
         # statistics
         running_corrects += torch.sum(preds == labels.data)
-        result.append(preds)
-        
+        result.append(outputs)
+
     acc = running_corrects.double() / dataset_sizes['val']
 
     print('Checkpoint: {}, Acc: {:.4f}'.format(args.ckpt, acc))
@@ -370,7 +370,7 @@ def predict_param_val(model_ckpt):
 
         # statistics
         running_corrects += torch.sum(preds == labels.data)
-        result.append(preds)
+        result.append(outputs)
         
     acc = running_corrects.double() / dataset_sizes['val']
 
@@ -455,7 +455,7 @@ def KNN_val(data):
         preds = find_knn_cos(outputs, feature, label, args.k)
         # statistics
         running_corrects += torch.sum(preds.to(device) == labels.data)
-        result.append(preds)
+        result.append(outputs)
 
     epoch_acc = running_corrects.double() / dataset_sizes['val']
     time_elapsed = time.time() - since
@@ -490,6 +490,9 @@ if __name__ == '__main__':
             labels = predict_param_val(model)
         else:
             labels = KNN_val(model)
+        label=labels.cpu().data.numpy()
         with open('result.txt','w') as f:
-            for i in labels:
-                f.write('%d\n'%(i+1))
+            for i in range(label.shape[0]):
+                for j in range(label.shape[1]):
+                    f.write('%lf '%label[i,j])
+                f.write('\n')
