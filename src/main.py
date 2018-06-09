@@ -209,14 +209,14 @@ def baseline_val(model_ckpt):
 
         # statistics
         running_corrects += torch.sum(preds == labels.data)
-        result.append(outputs)
+        result.append(outputs.cpu().data.numpy())
 
     acc = running_corrects.double() / dataset_sizes['val']
 
     print('Checkpoint: {}, Acc: {:.4f}'.format(args.ckpt, acc))
 
     print('')
-    return torch.cat(result, dim=0)
+    return np.concatenate(result,axis=0)
 
 
 def train_model_for_predict_param(model, criterion, optimizer, scheduler, num_epochs=25):
@@ -370,14 +370,14 @@ def predict_param_val(model_ckpt):
 
         # statistics
         running_corrects += torch.sum(preds == labels.data)
-        result.append(outputs)
+        result.append(outputs.cpu().data.numpy())
         
     acc = running_corrects.double() / dataset_sizes['val']
 
     print('Checkpoint: {}, Acc: {:.4f}'.format(args.ckpt, acc))
 
     print('')
-    return torch.cat(result, dim=0)
+    return np.concatenate(result,axis=0)
 
 def KNN():
     model = models.alexnet(pretrained=True)
@@ -455,14 +455,14 @@ def KNN_val(data):
         preds = find_knn_cos(outputs, feature, label, args.k)
         # statistics
         running_corrects += torch.sum(preds.to(device) == labels.data)
-        result.append(outputs)
+        result.append(outputs.cpu().data.numpy())
 
     epoch_acc = running_corrects.double() / dataset_sizes['val']
     time_elapsed = time.time() - since
     print('Validation complete in {:.0f}m {:.0f}s Acc: {:.4f}'.format(
         time_elapsed // 60, time_elapsed % 60, epoch_acc))
 
-    return torch.cat(result, dim=0)
+    return np.concatenate(result,axis=0)
 
 
 if __name__ == '__main__':
@@ -490,9 +490,9 @@ if __name__ == '__main__':
             labels = predict_param_val(model)
         else:
             labels = KNN_val(model)
-        label=labels.cpu().data.numpy()
         with open('result.txt','w') as f:
-            for i in range(label.shape[0]):
-                for j in range(label.shape[1]):
-                    f.write('%lf '%label[i,j])
+            for i in range(labels.shape[0]):
+                for j in range(labels.shape[1]):
+                    f.write('%lf '%labels[i,j])
                 f.write('\n')
+# for i in $(seq 1 15);do CUDA_VISIBLE_DEVICES=7 ./main.py --step_size 30 --prefix 7_$i --lr 0.0001;done
