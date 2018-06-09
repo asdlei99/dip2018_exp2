@@ -490,7 +490,7 @@ if __name__ == '__main__':
             labels = predict_param_val(model)
         else:
             labels = KNN_val(model)
-        with open('result.txt','w') as f:
+        with open('%s.txt'%(args.ckpt.replace('.pth','')),'w') as f:
             for i in range(labels.shape[0]):
                 for j in range(labels.shape[1]):
                     f.write('%lf '%labels[i,j])
