@@ -1,5 +1,7 @@
 # dip2018_exp2
 
+This repo is abandoned. See [https://github.com/Trinkle23897/dip2018](https://github.com/Trinkle23897/dip2018)
+
 ## feature的处理
 
 ```
